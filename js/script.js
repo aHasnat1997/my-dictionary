@@ -2,11 +2,16 @@
 
 const findBtn = () => {
   const findFild = document.getElementById('find-fild').value;
+  // if(typeof findFild === 'number'){
+  //   alert('Search with Word...');
+  //   return 0;
+  // }
+  // else{
+  //   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${findFild}`;
+  //   fetch(url).then(res => res.json()).then(deta => showDeta(deta[0]));
+  // }
   const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${findFild}`;
-  // console.log(url);
-
   fetch(url).then(res => res.json()).then(deta => showDeta(deta[0]));
-
 
   document.getElementById('find-fild').value = '';
   document.getElementById('contener').innerHTML = '';
@@ -14,8 +19,11 @@ const findBtn = () => {
 
 const showDeta = (deta) => {
   const { word, phonetic } = deta;
-  console.log(deta);
-  // console.log(deta.meanings[0].definitions[0].example);
+  // console.log(deta);
+
+  const synonymsNoun = deta.meanings[0].synonyms.map(() => deta.meanings[0].synonyms.join(" , "));
+  let synonymsVerb = (deta.meanings[1].synonyms === []) ? " " : deta.meanings[1].synonyms.map(() => deta.meanings[1].synonyms.join(" , "));
+
   const contener = document.getElementById('contener');
   const div = document.createElement('div');
   div.innerHTML = `
@@ -26,13 +34,12 @@ const showDeta = (deta) => {
       <h4 class="text-2xl font-semibold">Noun</h4>
       <hr class="w-full" />
     </div>
-    <h3 class="text-2xl mt-8 font-bold">Synonyms : <em class="font-normal">${deta.meanings[0].synonyms[0]}, ${deta.meanings[0].synonyms[1]}, ${deta.meanings[0].synonyms[3]}</em></h3>
+    <h3 class="text-2xl mt-8 font-bold">Synonyms : <em class="font-normal">${synonymsNoun[0]}</em></h3>
     <div class="flex items-center gap-2 mt-4">
       <h4 class="text-3xl font-semibold">Verb</h4>
       <hr class="w-full" />
     </div>
-    <h3 class="text-2xl mt-8 font-bold">Synonyms : <em class="font-normal">${deta.meanings[1].synonyms[0]}, ${deta.meanings[1].synonyms[1]}, ${deta.meanings[1].synonyms[2]}</em>
-    </h3>
+    <h3 class="text-2xl mt-8 font-bold">Synonyms : <em class="font-normal">${synonymsVerb[0]}</em></h3>
   </div>
   `;
   contener.appendChild(div)
